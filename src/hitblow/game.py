@@ -44,6 +44,10 @@ def play(digits=3):
     print(f"\nHit & Blow（{digits} 桁・重複なし）を開始します！")
     print("⚠️ 注意: 5つの『ドボン数字』が仕掛けられています。踏むと一発ゲームアウト！")
 
+    # 回数制限機能を読み込んで設定する
+    from .seigen import set_limit
+    set_limit(digits, secret)
+    
     tries = 0
     while True:
         guess = input("予想 > ").strip()
