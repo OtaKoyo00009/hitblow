@@ -14,6 +14,34 @@ def play(digits=3):
     print(f"Hit & Blow（{digits} 桁・重複なし）")
 
     # ===== ① 開始時に足す（難易度・あいさつ など）: ここに書く =====
+    print("★ Hit & Blow カスタム桁数モード ★")
+
+    # 好きな桁数を入力してもらう（デフォルトは3桁）
+    digit_input = input(
+        "何桁でプレイしますか？ (1〜10) [未入力なら3桁] > "
+    ).strip()
+
+    if digit_input.isdigit():
+        chosen_digits = int(digit_input)
+
+        # 1〜10桁の範囲内ならその桁数にする
+        if 1 <= chosen_digits <= 10:
+            digits = chosen_digits
+        else:
+            print("範囲外のため、3桁で開始します。")
+            digits = 3
+
+    elif digit_input != "":
+        print("数値ではなかったため、3桁で開始します。")
+        digits = 3
+
+    # 決まった桁数で正解を作る
+    secret = make_secret(digits)
+    print(f"\nHit & Blow（{digits} 桁・重複なし）を開始します！")
+
+    # 回数制限機能を読み込んで設定する
+    from .seigen import set_limit
+    set_limit(digits, secret)
 
     tries = 0
     while True:
@@ -27,9 +55,11 @@ def play(digits=3):
         if len(guess) != digits or not guess.isdigit():
             print(f"{digits} 桁の数字で入力してね")
             continue
+
         tries += 1
         hit, blow = judge(secret, guess)
         print(f"  Hit={hit}  Blow={blow}")
+
         if hit == digits:
 
             # ===== ③ 勝利時に足す（スコア・履歴 など）: ここに書く =====
