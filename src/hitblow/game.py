@@ -16,32 +16,33 @@ def play(digits=3):
     # ===== ① 開始時に足す（難易度・あいさつ など）: ここに書く =====
     print("★ Hit & Blow カスタム桁数モード ★")
 
-    # 好きな桁数を入力してもらう（デフォルトは3桁）
-    digit_input = input(
-        "何桁でプレイしますか？ (1〜10) [未入力なら3桁] > "
-    ).strip()
 
+    # 好きな桁数を入力してもらう（デフォルトは3桁）
+    digit_input = input("何桁でプレイしますか？ (1〜10) [未入力なら3桁] > ").strip()
+    
     if digit_input.isdigit():
         chosen_digits = int(digit_input)
+        # 1〜10桁の範囲内ならその桁数にし、それ以外なら3桁にする安全装置
 
-        # 1〜10桁の範囲内ならその桁数にする
+        
         if 1 <= chosen_digits <= 10:
             digits = chosen_digits
         else:
             print("範囲外のため、3桁で開始します。")
-            digits = 3
 
+            
+            digits = 3
     elif digit_input != "":
         print("数値ではなかったため、3桁で開始します。")
-        digits = 3
 
     # 決まった桁数で正解を作る
     secret = make_secret(digits)
-    print(f"\nHit & Blow（{digits} 桁・重複なし）を開始します！")
 
-    # 回数制限機能を読み込んで設定する
-    from .seigen import set_limit
-    set_limit(digits, secret)
+    from .dobon import init_dobons
+    dobon_numbers = init_dobons(secret, digits, count=5)
+
+    print(f"\nHit & Blow（{digits} 桁・重複なし）を開始します！")
+    print("⚠️ 注意: 5つの『ドボン数字』が仕掛けられています。踏むと一発ゲームアウト！")
 
     tries = 0
     while True:
@@ -51,6 +52,15 @@ def play(digits=3):
         # 例:  from .hint import hint
         #      if guess == "h":
         #          print(hint(secret)); continue
+        from .dobon import is_dobon
+        if is_dobon(guess, dobon_numbers):
+            print("\n💥 ドカーン！！！ 💥")
+            print(f"ドボン数字【 {guess} 】を踏んでしまいました！ゲームオーバー！")
+            print(f"（正解は {secret} でした）")
+            # せっかくなので他のドボン数字も教えてあげる親切設計
+            other_dobons = [d for d in dobon_numbers if d != guess]
+            print(f"（他のドボン数字は {', '.join(other_dobons)} でした）")
+            break
 
         if len(guess) != digits or not guess.isdigit():
             print(f"{digits} 桁の数字で入力してね")
