@@ -31,7 +31,12 @@ def play(digits=3):
 
     # 決まった桁数で正解を作る
     secret = make_secret(digits)
+
+    from .dobon import init_dobons
+    dobon_numbers = init_dobons(secret, digits, count=5)
+
     print(f"\nHit & Blow（{digits} 桁・重複なし）を開始します！")
+    print("⚠️ 注意: 5つの『ドボン数字』が仕掛けられています。踏むと一発ゲームアウト！")
 
     tries = 0
     while True:
@@ -41,6 +46,15 @@ def play(digits=3):
         # 例:  from .hint import hint
         #      if guess == "h":
         #          print(hint(secret)); continue
+        from .dobon import is_dobon
+        if is_dobon(guess, dobon_numbers):
+            print("\n💥 ドカーン！！！ 💥")
+            print(f"ドボン数字【 {guess} 】を踏んでしまいました！ゲームオーバー！")
+            print(f"（正解は {secret} でした）")
+            # せっかくなので他のドボン数字も教えてあげる親切設計
+            other_dobons = [d for d in dobon_numbers if d != guess]
+            print(f"（他のドボン数字は {', '.join(other_dobons)} でした）")
+            break
 
         if len(guess) != digits or not guess.isdigit():
             print(f"{digits} 桁の数字で入力してね")
