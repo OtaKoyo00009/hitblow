@@ -14,6 +14,24 @@ def play(digits=3):
     print(f"Hit & Blow（{digits} 桁・重複なし）")
 
     # ===== ① 開始時に足す（難易度・あいさつ など）: ここに書く =====
+    print("★ Hit & Blow カスタム桁数モード ★")
+    
+    # 好きな桁数を入力してもらう（デフォルトは3桁）
+    digit_input = input("何桁でプレイしますか？ (1〜10) [未入力なら3桁] > ").strip()
+    
+    if digit_input.isdigit():
+        chosen_digits = int(digit_input)
+        # 1〜10桁の範囲内ならその桁数にし、それ以外なら3桁にする安全装置
+        if 1 <= chosen_digits <= 10:
+            digits = chosen_digits
+        else:
+            print("範囲外のため、3桁で開始します。")
+    elif digit_input != "":
+        print("数値ではなかったため、3桁で開始します。")
+
+    # 決まった桁数で正解を作る
+    secret = make_secret(digits)
+    print(f"\nHit & Blow（{digits} 桁・重複なし）を開始します！")
 
     tries = 0
     while True:
