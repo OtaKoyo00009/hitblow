@@ -81,8 +81,7 @@ def play(digits=3):
             # ===== ③ 勝利時に足す（スコア・履歴 など）: ここに書く =====
             # 指定されたスコア計算式
             score = (
-                digits
-                * tries
+                digits * (max_tries-tries)
                 / max_tries
                 * 10000
             )
