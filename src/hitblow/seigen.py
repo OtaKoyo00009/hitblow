@@ -43,6 +43,7 @@ def set_limit(digits, secret):
                 hit, blow = judge(secret, guess)
                 print(f"  Hit={hit}  Blow={blow}")
                 print(f"回数制限に達しました。答えは {secret} です。")
+                print("スコア：0 点")
 
                 builtins.input = original_input
                 raise SystemExit
@@ -50,3 +51,4 @@ def set_limit(digits, secret):
         return guess
 
     builtins.input = limited_input
+    return limit
