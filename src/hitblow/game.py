@@ -29,7 +29,6 @@ def play(digits=3):
             digits = chosen_digits
         else:
             print("範囲外のため、3桁で開始します。")
-
             
             digits = 3
     elif digit_input != "":
@@ -46,7 +45,7 @@ def play(digits=3):
 
     # 回数制限機能を読み込んで設定する
     from .seigen import set_limit
-    set_limit(digits, secret)
+    max_tries = set_limit(digits, secret)
     
     tries = 0
     while True:
@@ -64,6 +63,9 @@ def play(digits=3):
             # せっかくなので他のドボン数字も教えてあげる親切設計
             other_dobons = [d for d in dobon_numbers if d != guess]
             print(f"（他のドボン数字は {', '.join(other_dobons)} でした）")
+            # ドボンの場合はスコア0
+            score = 0
+            print(f"スコア：{score} 点")
             break
 
         if len(guess) != digits or not guess.isdigit():
@@ -77,6 +79,14 @@ def play(digits=3):
         if hit == digits:
 
             # ===== ③ 勝利時に足す（スコア・履歴 など）: ここに書く =====
+            # 指定されたスコア計算式
+            score = (
+                digits
+                * tries
+                / max_tries
+                * 10000
+            )
 
             print(f"正解！ {tries} 回で当たり（答え {secret}）")
+            print(f"スコア：{score:.0f} 点")
             break
